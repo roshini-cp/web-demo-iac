@@ -1,0 +1,27 @@
+version: 0.2
+env:
+  variables:
+    REPOSITORY_URI: "218195379200.dkr.ecr.ap-south-1.amazonaws.com/my-repo" 
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 218195379200.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t my-repo .
+      - docker tag my-repo:latest $REPOSITORY_URI:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"test-container","imageUri":"%s"}]' $REPOSITORY_URI:latest > imagedefinitions.json
+      - echo Pushing the Docker completed on `date`
+      - echo Deploying  images...
+artifacts:
+    files: imagedefinitions.json
