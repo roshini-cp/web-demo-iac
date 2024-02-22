@@ -10,21 +10,22 @@ artifacts {
   }
 source {
     type            = "GITHUB"
-git_clone_depth     = 1
-          location            = "https://github.com/roshini-cp/webapp-demo.git" 
-buildspec = data.local_file.buildspec_local.content
-git_submodules_config {
-               fetch_submodules = false
-            }
+    git_clone_depth     = 1
+    location            = "https://github.com/roshini-cp/webapp-demo.git" 
+    buildspec = data.local_file.buildspec_local.content
+    git_submodules_config {
+    fetch_submodules = false
+    }
 }
  environment {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
-privileged_mode             = true
- image                       = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
- compute_type                = "BUILD_GENERAL1_SMALL"
+    privileged_mode             = true
+    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    compute_type                = "BUILD_GENERAL1_SMALL"
   }
-service_role = "arn:aws:iam::218195379200:role/service-role/codebuild-web-demo-service-role"
+
+    service_role = "arn:aws:iam::218195379200:role/service-role/codebuild-web-demo-service-role"
 }
 
 data "local_file" "buildspec_local" {
